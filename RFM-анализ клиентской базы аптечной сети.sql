@@ -2,14 +2,13 @@
 --рассчитываем ключевые метрики для каждого клиента:
 -- Recency — сколько дней прошло с последней покупки;
 -- Frequency — количество покупок;
---Monetary — общая сумма трат.  and card != '2000200189985'
+--Monetary — общая сумма трат.  
 SELECT card,
 EXTRACT(DAY FROM '2022-06-09'::timestamp - MAX(datetime)) AS recency,
 COUNT(*) AS frequency,
 SUM(summ) AS monetary
 FROM bonuscheques
 WHERE card LIKE '2000%' 
-AND card != '2000200189985'
 GROUP BY card
 ORDER BY Frequency desc, Monetary desc, recency;
 
@@ -22,7 +21,7 @@ FROM bonuscheques
 WHERE card LIKE '2000%'
 AND card NOT IN ('2000200189985', '2000200170860', '2000200196556');
 
--- Шаг 2. Анализ распределения с помощью NTILE(3)
+-- Шаг 2. Анализ распределения с помощью PERCENTILE
 --**Задача:** понять, где находятся «естественные» границы между сегментами, не прибегая к субъективным оценкам.
 --AVG-MAX-MIN-PERCENTILE СЕГМЕНТОВ
 WITH rfm_base AS (
